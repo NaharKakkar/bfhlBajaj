@@ -12,11 +12,11 @@ import java.util.List;
 @Service
 public class BfhlServiceImpl implements BfhlService {
 
-    // static user details - adjust if needed
-    private static final String FULL_NAME = "john doe"; // must be lowercase per spec
-    private static final String DOB_DDMMYYYY = "17091999";
-    private static final String EMAIL = "john@xyz.com";
-    private static final String ROLL = "ABCD123";
+    // TODO: Update these with your actual details
+    private static final String FULL_NAME = "nahar_kakkar";   // lowercase as per spec
+    private static final String DOB_DDMMYYYY = "10062006";     // dd/mm/yyyy without slashes
+    private static final String EMAIL = "nahar0744.be23@chitkara.edu.in";
+    private static final String ROLL = "2310990744";
 
     @Override
     public ResponseDto process(RequestDto request) {
@@ -35,8 +35,10 @@ public class BfhlServiceImpl implements BfhlService {
             for (String token : data) {
                 if (token == null) continue;
                 String t = token.trim();
+                if (t.isEmpty()) continue;
+
                 if (t.matches("^\\d+$")) {
-                    // numeric
+                    // purely numeric token
                     try {
                         long val = Long.parseLong(t);
                         sum += val;
@@ -46,26 +48,35 @@ public class BfhlServiceImpl implements BfhlService {
                             odd.add(t);
                         }
                     } catch (NumberFormatException e) {
-                        // treat as special if too large
+                        // too large to parse – treat as special
                         specials.add(t);
                     }
                 } else if (t.matches("^[A-Za-z]+$")) {
+                    // purely alphabetical token – store in uppercase
                     alphabets.add(t.toUpperCase());
+                    // collect individual chars for concat_string
                     for (char c : t.toCharArray()) {
                         allAlphaChars.add(c);
                     }
                 } else {
+                    // everything else is a special character
                     specials.add(t);
                 }
             }
 
-            // build concat_string: reverse all alphabetical chars and apply alternating caps (start uppercase)
+            // Build concat_string:
+            // 1. Take all individual alphabetical characters in order of appearance
+            // 2. Reverse the list
+            // 3. Apply alternating caps starting with uppercase
             Collections.reverse(allAlphaChars);
             StringBuilder concat = new StringBuilder();
             boolean upper = true;
             for (char c : allAlphaChars) {
-                if (upper) concat.append(Character.toUpperCase(c));
-                else concat.append(Character.toLowerCase(c));
+                if (upper) {
+                    concat.append(Character.toUpperCase(c));
+                } else {
+                    concat.append(Character.toLowerCase(c));
+                }
                 upper = !upper;
             }
 
