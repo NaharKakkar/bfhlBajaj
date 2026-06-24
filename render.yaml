@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: spring-bfhl
-    env: docker
-    plan: free
-    region: oregon
-    envVars:
-      - key: PORT
-        value: 8080
